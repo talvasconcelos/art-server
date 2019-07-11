@@ -1,0 +1,3 @@
+node_modules/
+aistore/node_modules/
+.env
