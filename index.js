@@ -3,8 +3,8 @@ dotenv.config()
 
 const Polka = require('polka')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
-const db = require('./mongo')
 const routes = require('./routes')
 
 const polka = Polka()
@@ -17,6 +17,7 @@ polka.use(bodyParser.urlencoded({extended: true}))
 
 
 polka
+    .use(cors())
     .use('api', routes)
     // .get('/', (req, res) => {
     //     res.end(`Hello world!`)

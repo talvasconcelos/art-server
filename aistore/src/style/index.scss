@@ -1,0 +1,81 @@
+@charset "utf-8";
+@import "../node_modules/bulma/sass/utilities/initial-variables";
+
+$family-sans-serif: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto;
+
+// Set your brand colors
+$purple: #8a4d76;
+$pink: #fa7c91;
+$brown: #757763;
+$beige-light: #d0d1cd;
+$beige-lighter: #eff0eb;
+
+// Update Bulma's global variables
+$family-sans-serif: 'Nunito', sans-serif;
+$grey-dark: $brown;
+$grey-light: $beige-light;
+$primary: $purple;
+$link: $pink;
+$widescreen-enabled: false;
+$fullhd-enabled: false;
+
+// Update some of Bulma's component variables
+$body-background-color: $beige-lighter;
+$control-border-width: 2px;
+$input-border-color: transparent;
+$input-shadow: none;
+
+@import "../node_modules/bulma/bulma";
+
+html, body {
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	background: #FAFAFA;
+	font-family: $family-sans-serif;
+	font-weight: 400;
+	color: #444;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+#app {
+	height: 100%;
+}
+
+.card {
+	margin-bottom: $column-gap;
+
+	@media (min-width: $tablet) {
+		margin-bottom: none;
+	}
+}
+
+.grid {
+	display: block;
+	
+	@media (min-width: $tablet) {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		grid-gap: $column-gap;
+	}
+}
+
+.noise-viz{
+	width: 128px;
+	height: 64px;
+	display: grid;
+	grid-template-columns: repeat(32, 1fr);
+	grid-template-rows: repeat(16, 1fr);
+}
+
+.noise-item{
+	width: 4px;
+	height: 4px;
+	background: grey;
+}

@@ -1,12 +1,16 @@
 const polka = require('polka')
+const models = require('./images')
 
 module.exports = polka()
     .get('/', (req, res) => {
         res.end(`Hello world!`)
     })
-    .get('/images', (req, res) => {
-        res.end()
+    .get('/images', async (req, res) => {
+        const images = await models.getImages(req.query.pageNo, req.query.size)        
+        res.end(JSON.stringify(images, null, 2))
     })
-    .get('/image/:id', (req, res) => {
-        res.end(JSON.stringify(req.params))
+    .get('/images/:id', async (req, res) => {
+        const image = await models.getSingleImage(req.params.id)
+        console.log(req.params.id)
+        res.end(JSON.stringify(image, null, 2))
     })

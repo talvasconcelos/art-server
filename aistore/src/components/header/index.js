@@ -1,15 +1,14 @@
-import { h } from 'preact';
-import { Link } from 'preact-router/match';
-import style from './style';
-
 const Header = () => (
-	<header class={style.header}>
-		<h1>Preact App</h1>
-		<nav>
-			<Link activeClassName={style.active} href="/">Home</Link>
-			<Link activeClassName={style.active} href="/profile">Me</Link>
-			<Link activeClassName={style.active} href="/profile/john">John</Link>
-		</nav>
+	<header>
+		<div class='container'>
+			<nav class='navbar'>
+				<div class='navbar-brand'>
+					<a class="navbar-item" href="https://bulma.io">
+						<h2>AIRStore</h2>
+					</a>
+				</div>
+			</nav>
+		</div>
 	</header>
 );
 
