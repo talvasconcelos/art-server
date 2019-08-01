@@ -1,7 +1,7 @@
 const Header = () => (
-	<header>
+	<header class='header-nav'>
 		<div class='container'>
-			<nav class='navbar'>
+			<nav class='navbar is-primary'>
 				<div class='navbar-brand'>
 					<a class="navbar-item" href="https://bulma.io">
 						<h2>AIRStore</h2>

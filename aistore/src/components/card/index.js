@@ -1,3 +1,4 @@
+import { Link } from 'preact-router'
 import { Latent } from '../latent_viz'
 
 export const Card = ({image}) => (
@@ -37,12 +38,12 @@ export const Card = ({image}) => (
                 </span>
                 <span>Share</span>
             </a>
-            <a href="#" class="card-footer-item">
+            <Link href={`/item/${image._id}`} class="card-footer-item">
                 <span class="icon">
                     <i class="fas fa-shopping-bag"></i>
                 </span>
                 <span>Buy</span>
-            </a>            
+            </Link>            
         </footer>
     </div>
 )
