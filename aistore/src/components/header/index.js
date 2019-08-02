@@ -3,7 +3,7 @@ const Header = () => (
 		<div class='container'>
 			<nav class='navbar is-primary'>
 				<div class='navbar-brand'>
-					<a class="navbar-item" href="https://bulma.io">
+					<a class="navbar-item" href="/">
 						<h2>AIRStore</h2>
 					</a>
 				</div>

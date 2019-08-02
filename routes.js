@@ -11,6 +11,6 @@ module.exports = polka()
     })
     .get('/images/:id', async (req, res) => {
         const image = await models.getSingleImage(req.params.id)
-        console.log(req.params.id)
+        // console.log(req.params.id)
         res.end(JSON.stringify(image, null, 2))
     })

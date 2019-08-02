@@ -2,55 +2,55 @@ import { h, Component } from 'preact';
 import style from './style';
 
 import { callBackendAPI } from '../../api'
+import { Latent } from '../../components/latent_viz'
 
 export default class Profile extends Component {
-	state = {
-		time: Date.now(),
-		count: 10
-	};
-
+	
 	componentDidMount() {
 		console.log('Ping API', this.props.image)
 		callBackendAPI(`images/${this.props.image}`)
-			.then(res => this.setState({ data: res.message }))
+			.then(res => this.setState({ 
+				image: res.message.image,
+				latent: res.message.latent,
+				genre: res.message.genre
+			}))
 			.catch(err => console.log(err));
 	}
 
-	// // update the current time
-	// updateTime = () => {
-	// 	this.setState({ time: Date.now() });
-	// };
-
-	// increment = () => {
-	// 	this.setState({ count: this.state.count+1 });
-	// };
-
-	// // gets called when this route is navigated to
-	// componentDidMount() {
-	// 	// start a timer for the clock:
-	// 	this.timer = setInterval(this.updateTime, 1000);
-	// }
-
-	// // gets called just before navigating away from the route
-	// componentWillUnmount() {
-	// 	clearInterval(this.timer);
-	// }
-
-	// Note: `user` comes from the URL, courtesy of our router
-	render({ item }, { time, count }) {
+	render({}, { image, latent, genre }) {
 		return (
-			<div class={style.profile}>
-				<h1>Profile: {item}</h1>
-				<p>This is the user profile for a user named { item }.</p>
-
-				<div>Current time: {new Date(time).toLocaleString()}</div>
-
-				<p>
-					<button onClick={this.increment}>Click Me</button>
-					{' '}
-					Clicked {count} times.
-				</p>
-			</div>
+			<main>
+				<div class="section">
+					<div class="container">
+						<div class="columns">
+							<div class="column">
+								<div class='product'>
+									<div class='bg' style={{backgroundImage: `url(../assets/images/${image})`}} />
+									<figure class='image is-128x128'>
+										<img src={`../assets/images/${image}`} alt='' />
+									</figure>
+								</div>
+							</div>
+							<div class="column">
+								<div class='content is-medium'>
+									<h3>{`${genre}`}</h3>
+									<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, est?</p>
+									<Latent data={latent}/>
+									<br/>
+									<div class="field is-grouped">
+										<p class="control">
+											<a class="button is-link">Like</a>
+										</p>
+										<p class="control">
+											<a class="button is-primary">Buy</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
 		);
 	}
 }
