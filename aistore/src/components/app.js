@@ -1,11 +1,12 @@
-import { h, Component } from 'preact';
-import { Router } from 'preact-router';
+import { h, Component } from 'preact'
+import { Router } from 'preact-router'
 
-import Header from './header';
+import Header from './header'
 
 // Code-splitting is automated for routes
-import Home from '../routes/home';
-import Item from '../routes/item';
+import Home from '../routes/home'
+import Item from '../routes/item'
+import Thankyou from '../routes/thankyou'
 
 export default class App extends Component {
 	
@@ -24,6 +25,7 @@ export default class App extends Component {
 				<Router onChange={this.handleRoute}>
 					<Home path="/" />
 					<Item path="/item/:image" />
+					<Thankyou path="/thankyou/:image" />
 				</Router>
 			</div>
 		);

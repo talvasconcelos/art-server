@@ -1,40 +1,50 @@
 @charset "utf-8";
 @import "../node_modules/bulma/sass/utilities/initial-variables";
+@import "fluidtypo";
+
+
 
 $family-sans-serif: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto;
 
 // Set your brand colors
-$purple: #8a4d76;
-$pink: #fa7c91;
-$brown: #757763;
-$beige-light: #d0d1cd;
-$beige-lighter: #eff0eb;
+$blue: #007ee3;
+$grey: #768591;
+$light: #edeef1;
 
 // Update Bulma's global variables
-$grey-dark: $brown;
-$grey-light: $beige-light;
-$primary: $purple;
-$link: $pink;
+$grey-dark: $grey;
+$grey-light: $light;
+$primary: $blue;
+$link: $blue;
 $widescreen-enabled: false;
 $fullhd-enabled: false;
 
 // Update some of Bulma's component variables
-$body-background-color: $beige-lighter;
+$body-background-color: $light;
 $control-border-width: 2px;
 $input-border-color: transparent;
 $input-shadow: none;
 
+$min_width: 320px;
+$max_width: 1200px;
+$min_font: 16px;
+$max_font: 20px;
+
 @import "../node_modules/bulma/bulma";
+
+html {
+	@include fluid-type($min_width, $max_width, $min_font, $max_font);
+  }
 
 html, body {
 	height: 100%;
 	width: 100%;
 	padding: 0;
 	margin: 0;
-	background: #FAFAFA;
+	background: $light;
 	font-family: $family-sans-serif;
-	font-weight: 400;
-	color: #444;
+	font-weight: 300;
+	color: rgba(0,0,0,0.87);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -47,7 +57,7 @@ html, body {
 	height: 100%;
 }
 
-.is-centered {
+.is-centered-2 {
 	display: flex;
 	flex-direction: column;
 }
@@ -64,6 +74,8 @@ html, body {
 		margin-bottom: none;
 	}
 }
+
+.capitalize {text-transform: capitalize; }
 
 .grid {
 	display: block;
@@ -91,6 +103,7 @@ html, body {
 
 .product{
 	display: flex;
+	height: 100%;
 	justify-content: center;
 	align-items: center;
 	overflow: hidden;
@@ -103,9 +116,14 @@ html, body {
 
 .bg{
 	min-height: 35vh;
+	height: 100%;
 	width: 100%;
-	background-position: center;
+	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: cover;
-	filter: blur(2em) opacity(75%);
+	filter: blur(1.5em) opacity(75%);
+}
+
+.share {
+	padding: 1em;
 }
