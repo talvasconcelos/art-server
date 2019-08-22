@@ -1,4 +1,4 @@
-const API = 'http://localhost:3000/api/'
+const API = 'https://nudeart.herokuapp.com/api/'
 
 export const callBackendAPI = async (target) => {
     console.log('Ping API')

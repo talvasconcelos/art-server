@@ -1,5 +1,6 @@
 const db = require('./mongo')
 const ObjectId = require('mongoose').Types.ObjectId
+const crypto = require('crypto')
 
 const getImages = async (pageNo = 1, size = 12) => {
     const Images = db.collection('items')
@@ -38,9 +39,20 @@ const getSingleImage = async (id) => {
     return {error: false, message: data}
 }
 
+const updateImage = async (id) => {
+    const Images = db.collection('items')
+    const hasLink = await Images.findOne({_id: new ObjectId(id)}).downloadID
+    if(hasLink) {return false}
+    const randomURL = await crypto.randomBytes(64).toString('hex')
+    const update = {downloadID: randomURL}
+    const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, update, {new: true})
+    return data
+}
+
 module.exports = {
     getImages,
-    getSingleImage
+    getSingleImage,
+    updateImage
 }
 
 /*
