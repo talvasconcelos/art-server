@@ -49,10 +49,19 @@ const updateImage = async (id) => {
     return data
 }
 
+const getImageDownload = async (url) => {
+    const Images = db.collection('items')
+    const data = await Images.findOne({downloadID: url})
+    .catch(console.error)
+
+    return {error: false, message: data}
+}
+
 module.exports = {
     getImages,
     getSingleImage,
-    updateImage
+    updateImage,
+    getImageDownload
 }
 
 /*

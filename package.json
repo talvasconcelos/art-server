@@ -14,9 +14,11 @@
   "dependencies": {
     "@tensorflow/tfjs": "^1.2.8",
     "body-parser": "^1.19.0",
+    "canvas": "^2.6.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "httpie": "^1.1.2",
+    "image-pixels": "^2.2.2",
     "mongoose": "^5.6.6",
     "nodemailer": "^6.3.0",
     "polka": "^0.5.2"

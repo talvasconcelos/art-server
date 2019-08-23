@@ -35,7 +35,10 @@ module.exports = polka()
     })
     .get('/download/:id', async (req, res) => {
         const image = await models.getSingleImage(req.params.id)
-        res.end(JSON.stringify({msg: 'thanks'}))
+        if(!image) {
+            res.end()
+        }
+        res.end(JSON.stringify(image, null, 2))
     })
     .post('/payments/notify', async (req, res) => {
         console.log('check invoice')
