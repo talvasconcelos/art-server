@@ -34,9 +34,9 @@ module.exports = polka()
         res.end(JSON.stringify(image, null, 2))
     })
     .get('/download/:id', async (req, res) => {
-        const image = await models.getSingleImage(req.params.id)
+        const image = await models.getImageDownload(req.params.id)
         if(!image) {
-            res.end()
+            res.end({error: true, message: 'Not a valid link!'})
         }
         res.end(JSON.stringify(image, null, 2))
     })

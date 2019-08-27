@@ -29,14 +29,15 @@
     "preact-render-spy": "^1.2.1"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^1.2.8",
     "bulma": "^0.7.5",
     "node-sass": "^4.12.0",
     "preact": "^10.0.0-rc.1",
+    "preact-head": "^1.0.3",
     "preact-render-to-string": "^5.0.4",
     "preact-router": "^3.0.0",
-    "sass-loader": "^7.1.0",
-    "preact-head": "^1.0.3",
-    "react-social-sharing": "^3.0.1"
+    "react-social-sharing": "^3.0.1",
+    "sass-loader": "^7.1.0"
   },
   "jest": {
     "verbose": true,
