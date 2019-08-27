@@ -12,7 +12,7 @@ export default class Thankyou extends Component {
 				image: res.message.image,
 				latent: res.message.latent,
 				genre: res.message.genre,
-				downloadUrl : res.downloadID || false
+				downloadUrl : res.message.downloadID || false
 			}))
 			.catch(err => console.log(err))
 		//https://github.com/GregFrench/super-resolution/tree/master/public/model
@@ -34,9 +34,9 @@ export default class Thankyou extends Component {
 					</p>
 					<p>If you entered a valid email, you can close this window and i'll contact you as soon as the payment gets confirmed, else don't leave this page. Hit refresh in a few minutes (depending on the transaction fees) for the download link to be displayed bellow.
 					</p>
-					{downloadUrl && <p>
-						<strong>Follow this link to download your artwork:</strong> <Link href={downloadUrl}>{downloadUrl}</Link>
-					</p>}
+					<p>
+						<Link href={`/download/${downloadUrl}`} class={`button ${!downloadUrl ? 'is-loading' : 'is-primary'}`}>Download</Link>
+					</p>
 				</div>
                 </div>
             </div>
