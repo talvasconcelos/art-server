@@ -18,7 +18,7 @@ export default class Profile extends Component {
 
 
 	handleEmail = (e) => {
-		console.log(e.target.value)
+		// console.log(e.target.value)
 		this.setState({email: e.target.value, ready: this.validateEmail(e.target.value)})
 	}
 
@@ -27,7 +27,7 @@ export default class Profile extends Component {
 	}
 	
 	componentDidMount() {
-		console.log('Ping API', this.props)
+		console.log('Ping API')
 		callBackendAPI(`images/${this.props.image}`)
 			.then(res => this.setState({ 
 				image: res.message.image,

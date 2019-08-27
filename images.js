@@ -45,7 +45,7 @@ const updateImage = async (id) => {
     if(hasLink.downloadID) {return false}
     const randomURL = await crypto.randomBytes(64).toString('hex')
     const update = {downloadID: randomURL}
-    const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, update, {new: true})
+    const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
     return data
 }
 
