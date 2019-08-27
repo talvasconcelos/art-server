@@ -41,8 +41,8 @@ const getSingleImage = async (id) => {
 
 const updateImage = async (id) => {
     const Images = db.collection('items')
-    const hasLink = await Images.findOne({_id: new ObjectId(id)}).downloadID
-    if(hasLink) {return false}
+    const hasLink = await Images.findOne({_id: new ObjectId(id)})
+    if(hasLink.downloadID) {return false}
     const randomURL = await crypto.randomBytes(64).toString('hex')
     const update = {downloadID: randomURL}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, update, {new: true})
