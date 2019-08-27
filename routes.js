@@ -48,8 +48,8 @@ module.exports = polka()
             return
         }
         const invoiceStatus = status.data.status
-        console.log(invoiceStatus)
-        console.log(status.data.orderId)
+        // console.log(invoiceStatus)
+        // console.log(status.data.orderId)
         if(invoiceStatus === 'confirmed' || invoiceStatus === 'complete'){
             console.log('Download')
             const url = await models.updateImage(status.data.orderId)
