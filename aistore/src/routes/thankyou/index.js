@@ -1,5 +1,5 @@
 import { h, Component } from 'preact'
-import { Link } from 'preact-router'
+import { Link, route } from 'preact-router'
 
 import { callBackendAPI } from '../../api'
 
