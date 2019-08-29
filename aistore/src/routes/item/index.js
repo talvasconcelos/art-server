@@ -32,19 +32,20 @@ export default class Profile extends Component {
 			.then(res => this.setState({ 
 				image: res.message.image,
 				latent: res.message.latent,
-				genre: res.message.genre
+				genre: res.message.genre,
+				id: res.message._id
 			}))
 			.then(() => {
 				const head = document.head
 				const ogImg = document.createElement('meta')
 				ogImg.setAttribute('property', 'og:image')
-				ogImg.setAttribute('content', `https://nudeart.sparkpay.pt/images/${this.state.image}`)
+				ogImg.setAttribute('content', `https://nudeart.sparkpay.pt/assets/images/${this.state.image}`)
 				head.appendChild(ogImg)
 			})
 			.catch(err => console.log(err));
 	}
 
-	render({}, { image, latent, genre, ready, email }) {
+	render({}, { image, latent, genre, ready, email, id }) {
 		return (
 			<main>
 				<div class="section container">
@@ -87,9 +88,9 @@ export default class Profile extends Component {
 									<form method="POST" action="https://testnet.demo.btcpayserver.org/apps/2v7gwTLEfwyWLUyMxDkBmxPhMTWp/pos">
 									{/* <form method="POST" action="https://btcpay01.sparkpay.pt/apps/3LH81CAYBXkicZvGBv7XNvvC5t3D/pos"> */}
 										<input type="hidden" name="email" value={email} />
-										<input type="hidden" name="orderId" value={this.props.image} />
+										<input type="hidden" name="orderId" value={id} />
 										<input type="hidden" name="notificationUrl" value="https://nudeart.herokuapp.com/api/payments/notify" /> 
-										<input type="hidden" name="redirectUrl" value={`https://nudeart.sparkpay.pt/thankyou/${this.props.image}`} />
+										<input type="hidden" name="redirectUrl" value={`https://nudeart.sparkpay.pt/thankyou/${id}`} />
 										<button class="button is-primary" type="submit" name="choiceKey" value="ai painting" disabled={!ready}>฿uy</button>
 									</form>
 								</div>

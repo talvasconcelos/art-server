@@ -1,4 +1,4 @@
- const Notfound = () => (
+ const Error = () => (
     <section class="hero is-dark is-fullheight">
         <div class="hero-body">
             <div class="container has-text-centered">
@@ -13,4 +13,4 @@
     </section>
 )
 
-export default Notfound
+export default Error

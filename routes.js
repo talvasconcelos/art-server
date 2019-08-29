@@ -64,7 +64,7 @@ module.exports = polka()
                 text: `Your payment just got confirmed. You can proceed to the link bellow to download your painting!\n
                 Link: https://nudeart.sparkpay.pt/download/${url.downloadID}` // Plain text body
             }
-            console.log(url)
+            console.log(url.downloadID)
             await mailer(message)
         }
         if(invoiceStatus === 'paid'){

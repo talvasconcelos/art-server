@@ -28,7 +28,7 @@ function end() {
 export default class Download extends Component {
 
     state = {
-        loading: true,
+        loading: false,
         working: false,
         model: false,
         error: false,
@@ -80,7 +80,7 @@ export default class Download extends Component {
             const img = await this.getImage(`../assets/images/${this.state.image}`)            
             tensor = await tf.tidy(() => {
                 return tf.browser.fromPixels(img)
-                    .resizeNearestNeighbor([32, 32]) //testing only
+                    // .resizeNearestNeighbor([32, 32]) //testing only
                     .toFloat()
                     .div(tf.scalar(255))
                     .expandDims()
@@ -97,7 +97,6 @@ export default class Download extends Component {
         const image = await tf.tidy( () => {
             return inf2x
                 .clipByValue(0, 1)
-                .resizeBilinear([128, 128])
                 .mul(tf.scalar(255))
                 .round()
                 .toInt()
@@ -118,32 +117,31 @@ export default class Download extends Component {
     }
 	
 	componentDidMount() {
-        tf.setBackend(`${this.state.cpu ? 'cpu' : 'webgl'}`)
-        this.loadModel()
-		console.log('Ping API', this.props)
+		// console.log('Ping API', this.props)
         callBackendAPI(`download/${this.props.id}`)
-            .then((res) => {
-                if(res.error) {
-                    route(`/notfound`, true)
-                }
-                return res
+			.then(res => {
+                console.log(res)
+                if(res.error){ return route('/notfound', true) }
+                this.setState({
+                    image: res.image,
+                    latent: res.latent,
+                    genre: res.genre,
+                })
             })
-			.then(res => this.setState({ 
-				image: res.message.image,
-				latent: res.message.latent,
-        		genre: res.message.genre,
-                error: res.error
-            }))
+            .then(() => {
+                console.log('model')
+                tf.setBackend(`${this.state.cpu ? 'cpu' : 'webgl'}`)
+                this.loadModel()
+            })
             // .then(() => this.startInference())
 			.catch(console.error);
 	}
 
-	render({}, {loading, error, image}) {
+	render({}, {loading, image}) {
 		return (
 			<main class='section'>
 				<div class='container content'>
                     {loading && <div class={`pageloader ${loading && 'is-active'}`}><span class="title">Loading...</span></div>}
-                    {error && <h3>Sorry not a valid link!</h3>}
                     <h2>Original Painting</h2>
                     <figure class='image is-128x128'>
 						<img id='origImg' src={`../assets/images/${image}`} alt='' />

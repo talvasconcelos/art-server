@@ -1,24 +1,26 @@
 const db = require('./mongo')
 const ObjectId = require('mongoose').Types.ObjectId
 const crypto = require('crypto')
-const key = process.env.SECRET
-const algo = process.env.ALGO
+
+const key = 'e28ff632e55a841727eef770f592e6b1'
 
 const encrypt = (str) => {
-    const cipher = crypto.createCipher(algo, key)
-    let crypted = cipher.update(str, 'utf8', 'hex')
+    const input = str.toString()
+    const cipher = crypto.createCipher('aes-256-cbc', key)
+    let crypted = cipher.update(input, 'utf8', 'hex')
     crypted += cipher.final('hex')
     return crypted
 }
 
 const decrypt = (str) => {
-    const decipher = crypto.createDecipher(algo, key)
+    const input = str.toString()
+    const decipher = crypto.createDecipher('aes-256-cbc', key)
     try {
-        let decrypted = decipher.update(str, 'hex', 'utf8')
+        let decrypted = decipher.update(input, 'hex', 'utf8')
         decrypted += decipher.final('utf8')
         return decrypted
     } catch {
-        return false
+        return input
     }
 }
 
@@ -62,19 +64,27 @@ const getSingleImage = async (id) => {
 const updateImage = async (id) => {
     const Images = db.collection('items')
     const hasLink = await Images.findOne({_id: new ObjectId(id)})    
-    // if(hasLink.downloadID) {return false}
-    const randomURL = encrypt(id).toString()
+    if(hasLink.downloadID) {return false}
+    const randomURL = encrypt(id)
+    console.log(id, randomURL)
     const update = {downloadID: randomURL, confirmed: true}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
+        .catch(err => {
+            console.error(err)
+            return false
+        })
     return data.value
 }
 
 const getImageDownload = async (url) => {
     const Images = db.collection('items')
-    const image = decrypt(url).toString()
-    if(!image) {return false}
-    const data = await Images.findOne({_id: new ObjectId(image)})
-        .catch(console.error)
+    const id = decrypt(url)
+    if(!id) {return false}
+    const data = await Images.findOne({_id: new ObjectId(id), confirmed: true})
+        .catch(err => {
+            console.error(err)
+            return false
+        })
 
     return data
 }
