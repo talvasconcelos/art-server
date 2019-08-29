@@ -1,10 +1,12 @@
 import { h, Component } from 'preact'
 import * as tf from '@tensorflow/tfjs'
+import { route } from 'preact-router'
 
 tf.enableProdMode()
 // import Loader from '../../components/loader'
 
 import { callBackendAPI } from '../../api'
+import { browserDownloadsRouter } from '@tensorflow/tfjs-core/dist/io/browser_files';
 
 let startTime, endTime
 
@@ -95,13 +97,14 @@ export default class Download extends Component {
         const image = await tf.tidy( () => {
             return inf2x
                 .clipByValue(0, 1)
+                .resizeBilinear([128, 128])
                 .mul(tf.scalar(255))
                 .round()
                 .toInt()
                 .squeeze()
         })
         const [imgW, imgH, imgC] = image.shape
-        await this.drawImage(image.resizeBilinear([imgW*2, imgH*2]))
+        await this.drawImage(image)
         // console.log(this.state)
         this.setState({working: !this.state.working, result: true, imgW, imgH})
         end()
@@ -118,7 +121,13 @@ export default class Download extends Component {
         tf.setBackend(`${this.state.cpu ? 'cpu' : 'webgl'}`)
         this.loadModel()
 		console.log('Ping API', this.props)
-		callBackendAPI(`download/${this.props.id}`)
+        callBackendAPI(`download/${this.props.id}`)
+            .then((res) => {
+                if(res.error) {
+                    route(`/notfound`, true)
+                }
+                return res
+            })
 			.then(res => this.setState({ 
 				image: res.message.image,
 				latent: res.message.latent,
@@ -126,7 +135,7 @@ export default class Download extends Component {
                 error: res.error
             }))
             // .then(() => this.startInference())
-			.catch(err => console.log(err));
+			.catch(console.error);
 	}
 
 	render({}, {loading, error, image}) {

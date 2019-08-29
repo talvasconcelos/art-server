@@ -8,6 +8,7 @@ import Home from '../routes/home'
 import Item from '../routes/item'
 import Thankyou from '../routes/thankyou'
 import Download from '../routes/download'
+import Notfound from '../routes/notfound'
 
 export default class App extends Component {
 	
@@ -28,6 +29,7 @@ export default class App extends Component {
 					<Item path="/item/:image" />
 					<Thankyou path="/thankyou/:image" />
 					<Download path='/download/:id' />
+					<Notfound path='/notfound' />
 				</Router>
 			</div>
 		);

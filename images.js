@@ -1,6 +1,26 @@
 const db = require('./mongo')
 const ObjectId = require('mongoose').Types.ObjectId
 const crypto = require('crypto')
+const key = process.env.SECRET
+const algo = process.env.ALGO
+
+const encrypt = (str) => {
+    const cipher = crypto.createCipher(algo, key)
+    let crypted = cipher.update(str, 'utf8', 'hex')
+    crypted += cipher.final('hex')
+    return crypted
+}
+
+const decrypt = (str) => {
+    const decipher = crypto.createDecipher(algo, key)
+    try {
+        let decrypted = decipher.update(str, 'hex', 'utf8')
+        decrypted += decipher.final('utf8')
+        return decrypted
+    } catch {
+        return false
+    }
+}
 
 const getImages = async (pageNo = 1, size = 12) => {
     const Images = db.collection('items')
@@ -42,19 +62,22 @@ const getSingleImage = async (id) => {
 const updateImage = async (id) => {
     const Images = db.collection('items')
     const hasLink = await Images.findOne({_id: new ObjectId(id)})    
-    if(hasLink.downloadID) {return false}
-    const randomURL = await crypto.randomBytes(64).toString('hex')
-    const update = {downloadID: randomURL}
+    // if(hasLink.downloadID) {return false}
+    const randomURL = encrypt(id)
+    console.log(randomURL)
+    const update = {downloadID: randomURL, confirmed: true}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
     return data.value
 }
 
 const getImageDownload = async (url) => {
     const Images = db.collection('items')
-    const data = await Images.findOne({downloadID: url})
-    .catch(console.error)
+    const image = decrypt(url)
+    if(!image) {return false}
+    const data = await Images.findOne({_id: new ObjectId(image)})
+        .catch(console.error)
 
-    return {error: false, message: data}
+    return data
 }
 
 module.exports = {

@@ -36,7 +36,7 @@ module.exports = polka()
     .get('/download/:id', async (req, res) => {
         const image = await models.getImageDownload(req.params.id)
         if(!image) {
-            res.end({error: true, message: 'Not a valid link!'})
+            res.end(JSON.stringify({error: true, message: 'Not a valid link!'}))
         }
         res.end(JSON.stringify(image, null, 2))
     })
@@ -64,6 +64,7 @@ module.exports = polka()
                 text: `Your payment just got confirmed. You can proceed to the link bellow to download your painting!\n
                 Link: https://nudeart.sparkpay.pt/download/${url.downloadID}` // Plain text body
             }
+            console.log(url)
             await mailer(message)
         }
         if(invoiceStatus === 'paid'){
