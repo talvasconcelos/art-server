@@ -33,7 +33,8 @@ export default class Profile extends Component {
 				image: res.message.image,
 				latent: res.message.latent,
 				genre: res.message.genre,
-				id: res.message._id
+				id: res.message._id,
+				paid: res.message.paid || false
 			}))
 			.then(() => {
 				const head = document.head
@@ -45,7 +46,8 @@ export default class Profile extends Component {
 			.catch(err => console.log(err));
 	}
 
-	render({}, { image, latent, genre, ready, email, id }) {
+	render({}, { image, latent, genre, ready, email, id, paid }) {
+		console.log(this.state)
 		return (
 			<main>
 				<div class="section container">
@@ -76,23 +78,25 @@ export default class Profile extends Component {
 									<p><small>Piece generated from the gaussian latent space shown bellow.</small></p>
 									<Latent data={latent} />
 									<br/>
-									
-									<div class="field">
-										<p class="control">
-											<label class="label">Email</label>
-											<p class="help">Email needed to receive the download link for your painting after payment confirmation.</p>
-											<input class="input" type="email" placeholder="e.g. alexsmith@gmail.com" onKeyUp={this.handleEmail} value={email}/>
-											{/* <a class="button is-primary">฿uy</a> */}
-										</p>
-									</div>
-									<form method="POST" action="https://testnet.demo.btcpayserver.org/apps/2v7gwTLEfwyWLUyMxDkBmxPhMTWp/pos">
-									{/* <form method="POST" action="https://btcpay01.sparkpay.pt/apps/3LH81CAYBXkicZvGBv7XNvvC5t3D/pos"> */}
-										<input type="hidden" name="email" value={email} />
-										<input type="hidden" name="orderId" value={id} />
-										<input type="hidden" name="notificationUrl" value="https://nudeart.herokuapp.com/api/payments/notify" /> 
-										<input type="hidden" name="redirectUrl" value={`https://nudeart.sparkpay.pt/thankyou/${id}`} />
-										<button class="button is-primary" type="submit" name="choiceKey" value="ai painting" disabled={!ready}>฿uy</button>
-									</form>
+									{paid && <p>Artwork is awaiting payment confirmation.</p>}
+									{!paid && <div>
+										<div class="field">
+											<p class="control">
+												<label class="label">Email</label>
+												<p class="help">Email needed to receive the download link for your painting after payment confirmation.</p>
+												<input class="input" type="email" placeholder="e.g. alexsmith@gmail.com" onKeyUp={this.handleEmail} value={email}/>
+												{/* <a class="button is-primary">฿uy</a> */}
+											</p>
+										</div>
+										<form method="POST" action="https://testnet.demo.btcpayserver.org/apps/2v7gwTLEfwyWLUyMxDkBmxPhMTWp/pos">
+										{/* <form method="POST" action="https://btcpay01.sparkpay.pt/apps/3LH81CAYBXkicZvGBv7XNvvC5t3D/pos"> */}
+											<input type="hidden" name="email" value={email} />
+											<input type="hidden" name="orderId" value={id} />
+											<input type="hidden" name="notificationUrl" value="https://nudeart.herokuapp.com/api/payments/notify" /> 
+											<input type="hidden" name="redirectUrl" value={`https://nudeart.sparkpay.pt/thankyou/${id}`} />
+											<button class="button is-primary" type="submit" name="choiceKey" value="ai painting" disabled={!ready}>฿uy</button>
+										</form>
+									</div>}
 								</div>
 							</div>
 						</div>

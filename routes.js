@@ -48,7 +48,7 @@ module.exports = polka()
             return
         }
         const invoiceStatus = status.data.status
-        // console.log(invoiceStatus)
+        console.log(invoiceStatus)
         // console.log(status.data.orderId)
         if(invoiceStatus === 'confirmed' || invoiceStatus === 'complete'){
             console.log('Download')
@@ -68,6 +68,7 @@ module.exports = polka()
             await mailer(message)
         }
         if(invoiceStatus === 'paid'){
+            await models.markImagePaid(status.data.orderId)
             console.log('Await at least 1 confirmation!')
             const message = {
                 from: process.env.MAIL_SENDER, // Sender address

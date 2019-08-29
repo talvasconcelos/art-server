@@ -20,7 +20,7 @@ const decrypt = (str) => {
         decrypted += decipher.final('utf8')
         return decrypted
     } catch {
-        return input
+        return false
     }
 }
 
@@ -61,9 +61,20 @@ const getSingleImage = async (id) => {
     return {error: false, message: data}
 }
 
+const markImagePaid = async (id) => {
+    const Images = db.collection('items')
+    const update = {paid: true}
+    const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
+        .catch(err => {
+            console.error(err)
+            return false
+        })
+    return data.value
+}
+
 const updateImage = async (id) => {
     const Images = db.collection('items')
-    const hasLink = await Images.findOne({_id: new ObjectId(id)})    
+    const hasLink = await Images.findOne({_id: new ObjectId(id)}) 
     if(hasLink.downloadID) {return false}
     const randomURL = encrypt(id)
     console.log(id, randomURL)
@@ -74,6 +85,16 @@ const updateImage = async (id) => {
             return false
         })
     return data.value
+}
+
+const deleteImage = async (id) => {
+    const Images = db.collection('items')
+    const deleteImg = await Images.findOneAndDelete({_id: new ObjectId(id)}, {new: true})
+        .catch(err => {
+            console.error(err)
+            return false
+        })
+    return deleteImg.value
 }
 
 const getImageDownload = async (url) => {
@@ -92,8 +113,10 @@ const getImageDownload = async (url) => {
 module.exports = {
     getImages,
     getSingleImage,
+    markImagePaid,
     updateImage,
-    getImageDownload
+    getImageDownload,
+    deleteImage
 }
 
 /*
