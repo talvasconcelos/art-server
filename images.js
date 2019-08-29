@@ -2,7 +2,7 @@ const db = require('./mongo')
 const ObjectId = require('mongoose').Types.ObjectId
 const crypto = require('crypto')
 
-const key = 'e28ff632e55a841727eef770f592e6b1'
+const key = process.env.SECRET
 
 const encrypt = (str) => {
     const input = str.toString()
