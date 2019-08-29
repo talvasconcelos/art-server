@@ -63,8 +63,7 @@ const updateImage = async (id) => {
     const Images = db.collection('items')
     const hasLink = await Images.findOne({_id: new ObjectId(id)})    
     // if(hasLink.downloadID) {return false}
-    const randomURL = encrypt(id)
-    console.log(randomURL)
+    const randomURL = encrypt(id).toString()
     const update = {downloadID: randomURL, confirmed: true}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
     return data.value
@@ -72,7 +71,7 @@ const updateImage = async (id) => {
 
 const getImageDownload = async (url) => {
     const Images = db.collection('items')
-    const image = decrypt(url)
+    const image = decrypt(url).toString()
     if(!image) {return false}
     const data = await Images.findOne({_id: new ObjectId(image)})
         .catch(console.error)
