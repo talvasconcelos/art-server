@@ -18,10 +18,10 @@ export const Card = ({image, page, share}) => (
         <div class="card-content">
             <div class="content">
                 <div class='columns is-mobile'>
-                    <div class='column'>
+                    {/* <div class='column'>
                         <h6 class='subtitle'>Latent space</h6>
                         <Latent data={image.latent}/>
-                    </div>
+                    </div> */}
                     <div class='column'>
                     <h6 class='subtitle'>Specs</h6>
                         <div class='is-size-7'>

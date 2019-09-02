@@ -40,6 +40,7 @@ export default class Home extends Component {
 	getData(url) {
 		return callBackendAPI(url)
 			.then(res => this.setState({ images: res.message,  pages: res.pages}))
+			.then(() => console.log(this.state))
 			.catch(err => console.log(err))
 	}
 

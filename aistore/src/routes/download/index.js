@@ -6,7 +6,6 @@ tf.enableProdMode()
 // import Loader from '../../components/loader'
 
 import { callBackendAPI } from '../../api'
-import { browserDownloadsRouter } from '@tensorflow/tfjs-core/dist/io/browser_files';
 
 let startTime, endTime
 
@@ -126,6 +125,7 @@ export default class Download extends Component {
                     image: res.image,
                     latent: res.latent,
                     genre: res.genre,
+                    url: `http://sparkpay/pt/sr_img/${res.downloadID}/`
                 })
             })
             .then(() => {
@@ -137,14 +137,14 @@ export default class Download extends Component {
 			.catch(console.error);
 	}
 
-	render({}, {loading, image}) {
+	render({}, {loading, image, url}) {
 		return (
 			<main class='section'>
 				<div class='container content'>
                     {loading && <div class={`pageloader ${loading && 'is-active'}`}><span class="title">Loading...</span></div>}
-                    <h2>Original Painting</h2>
-                    <figure class='image is-128x128'>
-						<img id='origImg' src={`../assets/images/${image}`} alt='' />
+                    <h2>Upscaled Painting</h2>
+                    <figure class='image is-square'>
+						<img id='origImg' src={`${url}${image}`} alt='' />
 					</figure>
                     <div>
                         <h5>Read carefully</h5>

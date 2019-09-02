@@ -25,16 +25,16 @@ module.exports = polka()
         res.end(`Hello world!`)
     })
     .get('/images', async (req, res) => {
-        const images = await models.getImages(req.query.pageNo, req.query.size)        
+        const images = await models.getImages(req.query.pageNo, req.query.size).catch(console.error)     
         res.end(JSON.stringify(images, null, 2))
     })
     .get('/images/:id', async (req, res) => {
-        const image = await models.getSingleImage(req.params.id)
+        const image = await models.getSingleImage(req.params.id).catch(console.error)
         // console.log(req.params.id)
         res.end(JSON.stringify(image, null, 2))
     })
     .get('/download/:id', async (req, res) => {
-        const image = await models.getImageDownload(req.params.id)
+        const image = await models.getImageDownload(req.params.id).catch(console.error)
         if(!image) {
             res.end(JSON.stringify({error: true, message: 'Not a valid link!'}))
         }
@@ -62,7 +62,7 @@ module.exports = polka()
                 to: status.data.buyer.email,// List of recipients
                 subject: 'Your painting download is ready!', // Subject line
                 text: `Your payment just got confirmed. You can proceed to the link bellow to download your painting!\n
-                Link: https://nudeart.sparkpay.pt/download/${url.downloadID}` // Plain text body
+                Link: https://nudeart.sparkpay.pt/download/${await url.downloadID}` // Plain text body
             }
             console.log(url.downloadID)
             await mailer(message)

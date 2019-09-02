@@ -3,10 +3,11 @@ const ObjectId = require('mongoose').Types.ObjectId
 const crypto = require('crypto')
 
 const key = process.env.SECRET
+const algo = process.env.ALGO
 
 const encrypt = (str) => {
     const input = str.toString()
-    const cipher = crypto.createCipher('aes-256-cbc', key)
+    const cipher = crypto.createCipher(algo, key)
     let crypted = cipher.update(input, 'utf8', 'hex')
     crypted += cipher.final('hex')
     return crypted
@@ -14,7 +15,7 @@ const encrypt = (str) => {
 
 const decrypt = (str) => {
     const input = str.toString()
-    const decipher = crypto.createDecipher('aes-256-cbc', key)
+    const decipher = crypto.createDecipher(algo, key)
     try {
         let decrypted = decipher.update(input, 'hex', 'utf8')
         decrypted += decipher.final('utf8')
@@ -47,6 +48,8 @@ const getImages = async (pageNo = 1, size = 12) => {
     // })
 
     // console.log(data[0])
+    // console.log(data)
+    data.map(i => delete i.latent)
 
     return {error: false, message: data, pages: totalCount}
 }
@@ -72,12 +75,11 @@ const markImagePaid = async (id) => {
     return data.value
 }
 
-const updateImage = async (id) => {
+const updateImage = async (url) => {
     const Images = db.collection('items')
     const hasLink = await Images.findOne({_id: new ObjectId(id)}) 
-    if(hasLink.downloadID) {return false}
-    const randomURL = encrypt(id)
-    console.log(id, randomURL)
+    // if(hasLink.downloadID) {return false}
+    const randomURL = encrypt(url)
     const update = {downloadID: randomURL, confirmed: true}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
         .catch(err => {
@@ -99,7 +101,8 @@ const deleteImage = async (id) => {
 
 const getImageDownload = async (url) => {
     const Images = db.collection('items')
-    const id = decrypt(url)
+    const id = await decrypt(url)
+    console.log(id)
     if(!id) {return false}
     const data = await Images.findOne({_id: new ObjectId(id), confirmed: true})
         .catch(err => {
