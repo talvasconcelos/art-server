@@ -75,11 +75,11 @@ const markImagePaid = async (id) => {
     return data.value
 }
 
-const updateImage = async (url) => {
+const updateImage = async (id) => {
     const Images = db.collection('items')
     const hasLink = await Images.findOne({_id: new ObjectId(id)}) 
-    // if(hasLink.downloadID) {return false}
-    const randomURL = encrypt(url)
+    if(hasLink.downloadID) {return false}
+    const randomURL = encrypt(id)
     const update = {downloadID: randomURL, confirmed: true}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
         .catch(err => {

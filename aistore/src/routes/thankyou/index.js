@@ -32,10 +32,10 @@ export default class Thankyou extends Component {
 					<p>
 						You're payment was successful. For security reasons we'll just wait for at least 1 network confirmation to send you a download link. If you used Lightning Network it should be instantaneous.
 					</p>
-					<p>If you entered a valid email, you can close this window and i'll contact you as soon as the payment gets confirmed, else don't leave this page. Hit refresh in a few minutes (depending on the transaction fees) for the download link to be displayed bellow.
+					<p>If you entered a valid email, you can close this window and i'll contact you as soon as the payment gets confirmed, else don't leave this page or copy the URL and come back in a few minutes. Hit refresh in a few minutes (depending on the transaction fees) for the download link to be displayed bellow.
 					</p>
 					<p>
-						<Link href={`/download/${downloadUrl}`} class={`button ${!downloadUrl ? 'is-loading' : 'is-primary'}`}>Download</Link>
+						<Link href={`/download/${downloadUrl}`} class={`button is-primary ${!downloadUrl ? 'is-loading' : ''}`}>Download</Link>
 					</p>
 				</div>
                 </div>
