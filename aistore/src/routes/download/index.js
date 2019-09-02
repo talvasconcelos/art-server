@@ -1,120 +1,29 @@
 import { h, Component } from 'preact'
-import * as tf from '@tensorflow/tfjs'
 import { route } from 'preact-router'
 
-tf.enableProdMode()
-// import Loader from '../../components/loader'
 
 import { callBackendAPI } from '../../api'
-
-let startTime, endTime
-
-function start() {
-    startTime = new Date();
-};
-
-function end() {
-    endTime = new Date();
-    var timeDiff = endTime - startTime; //in ms
-    // strip the ms
-    timeDiff /= 1000;
-
-    // get seconds 
-    var seconds = Math.round(timeDiff);
-    console.log(seconds + " seconds");
-}
 
 export default class Download extends Component {
 
     state = {
-        loading: false,
-        working: false,
-        model: false,
         error: false,
-        cpu: true,
-        inference: null
     }
 
-    useCpu = async () => {
-        const cpu = this.state.cpu
-        await tf.setBackend(`${!cpu ? 'cpu' : 'webgl'}`)
-        await this.setState({cpu: !this.state.cpu, backend: tf.getBackend()})
-    }
-
-    loadModel = async () => {
-        await tf.ready()
-        const model = await tf.loadLayersModel('../assets/model/model.json')
-        console.log(tf.memory())
-        this.setState({loading: false, model: model, backend: tf.getBackend()})
-    }
-
-    getImage = async (src) => {
-        return new Promise((resolve, reject) => {
-            let img = new Image()
-            img.onload = () => resolve(img)
-            img.onerror = reject
-            img.src = src
-        })
-    }
-
-    drawImage = async (src) => {
+    imageDownload = () => {
         const canvas = document.createElement('canvas')
-        document.getElementById('upscale').appendChild(canvas)
-        await tf.browser.toPixels(src, canvas)
-        tf.dispose(src)
+        const ctx = canvas.getContext('2d')
+        const img = new Image()
+        img.src = `${this.state.url}/${this.state.image}`
+        img.onload = () => ctx.drawImage(img, 0, 0)
+        const link = document.createElement('a')
+        link.href = canvas.toDataURL()
+        link.setAttribute('download', `upscaled_${this.state.image}`)
+        document.body.appendChild(link)
+        link.click()
+        link.parentNode.removeChild(link)
     }
 
-    warmUp = async (model, zeros) => {
-        const result = await model.predict(zeros)
-        result.print()
-        result.dispose()
-        return
-    }
-
-    startInference = async () => {
-        start()
-        const model = this.state.model
-        let tensor
-        if(!this.state.inference){
-            const img = await this.getImage(`../assets/images/${this.state.image}`)            
-            tensor = await tf.tidy(() => {
-                return tf.browser.fromPixels(img)
-                    // .resizeNearestNeighbor([32, 32]) //testing only
-                    .toFloat()
-                    .div(tf.scalar(255))
-                    .expandDims()
-            })
-            await this.warmUp(model, tf.zerosLike(tensor).resizeBilinear([16, 16]))
-        } else {
-            tensor = this.state.inference
-            tensor.print()
-        }
-        console.log('Start inference.', tf.memory())
-        const inf2x = await tf.tidy(() => model.predict(tensor))
-        await this.setState({inference: inf2x})
-        console.log(tf.memory())
-        const image = await tf.tidy( () => {
-            return inf2x
-                .clipByValue(0, 1)
-                .mul(tf.scalar(255))
-                .round()
-                .toInt()
-                .squeeze()
-        })
-        const [imgW, imgH, imgC] = image.shape
-        await this.drawImage(image)
-        // console.log(this.state)
-        this.setState({working: !this.state.working, result: true, imgW, imgH})
-        end()
-    }
-
-    start = async () => {
-        await this.setState({working: !this.state.working})
-        await tf.nextFrame()
-        const time = await tf.time(() => this.startInference())
-        console.log(time)
-    }
-	
 	componentDidMount() {
 		// console.log('Ping API', this.props)
         callBackendAPI(`download/${this.props.id}`)
@@ -123,56 +32,40 @@ export default class Download extends Component {
                 if(res.error){ return route('/notfound', true) }
                 this.setState({
                     image: res.image,
-                    latent: res.latent,
+                    latent: JSON.stringify(res.latent, null),
                     genre: res.genre,
-                    url: `http://sparkpay/pt/sr_img/${res.downloadID}/`
+                    url: `http://sparkpay.pt/sr_img/${res.downloadID}/`
                 })
             })
-            .then(() => {
-                console.log('model')
-                tf.setBackend(`${this.state.cpu ? 'cpu' : 'webgl'}`)
-                this.loadModel()
-            })
-            // .then(() => this.startInference())
 			.catch(console.error);
 	}
 
-	render({}, {loading, image, url}) {
+	render({}, {image, latent, url}) {
 		return (
 			<main class='section'>
 				<div class='container content'>
-                    {loading && <div class={`pageloader ${loading && 'is-active'}`}><span class="title">Loading...</span></div>}
                     <h2>Upscaled Painting</h2>
                     <figure class='image is-square'>
-						<img id='origImg' src={`${url}${image}`} alt='' />
+						<img id='upImg' src={`${url}${image}`} alt='' />
 					</figure>
                     <div>
-                        <h5>Read carefully</h5>
-                        <p>The upscaling is done in your browser, please make sure you have at least <strong>12GB of GPU memory</strong>. If you're not sure about this choose to do the scaling with CPU but, it will take some time... As a reference, on my desktop (i7) it took around 40 minutes to scale from the original 128x128 picture to 512x512.</p>
-                        <p>If you want to make the artwork exclusive, don't forget to hit the make it exclusive after you downloaded your painting. Make sure you only delete, after you downloaded the files. After that the artwork won't be available ever again. Unless you have your latent data stored. Then you can contact me to generate it again.</p>
+                        <h5>Latent space</h5>
+                        <p><pre class='latent'>{latent}</pre></p>
+                    </div>
+                    <br/>                    
+                    <div>
+                        <h5>Done</h5>
+                        <p>Your image is ready for download. You can either right-click the image and do save image or click the buttons bellow. If you want to make this an exclusive art painting, click the "Exclusive" button bellow. Beware that the painting will no longer be displayed and will be deleted from the database. The only way to reproduce the painting is with the latent space.</p>
                     </div>
                     <br/>
                     <div>
-                        <h5>Now let's do some magic...</h5>
+                        <h5>Save your files</h5>
                         <div class="field is-grouped">
-                            <div class="control">
-                                <label class="checkbox">
-                                    <input type="checkbox" name="cpu" onChange={this.useCpu} checked={this.state.cpu}/>
-                                    &nbsp;Use CPU
-                                </label>
-                            </div>
-                            <p className='control'>
-                                <a class={`button is-primary ${this.state.working && 'is-loading'}`} onClick={this.start} >Scale 2x</a>
+                            <p class='control'>
+                                <a download={`upscaled_${image}`} class={`button is-primary imageDownload`} onClick={this.imageDownload}>Scale 2x</a>
                             </p>
                         </div>
                     </div>
-                    {this.state.result && 
-                    <div>
-                        <h5>Done</h5>
-                        <p>Your image is ready for download. Current dimensions are {`${this.state.imgW}x${this.state.imgH}`}. You can hit the scale button again to go up to {`${this.state.imgW * 2}x${this.state.imgH * 2}`}. I must warn you that unless you have a powerfull GPU don't go above 512x512.</p>
-                    </div>
-                    }
-                    <div id='upscale'></div>
 				</div>
 			</main>
 		);

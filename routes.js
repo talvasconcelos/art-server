@@ -62,9 +62,8 @@ module.exports = polka()
                 to: status.data.buyer.email,// List of recipients
                 subject: 'Your painting download is ready!', // Subject line
                 text: `Your payment just got confirmed. You can proceed to the link bellow to download your painting!\n
-                Link: https://nudeart.sparkpay.pt/download/${await url.downloadID}` // Plain text body
+                Link: https://nudeart.sparkpay.pt/download/${url.downloadID}` // Plain text body
             }
-            console.log(url.downloadID)
             await mailer(message)
         }
         if(invoiceStatus === 'paid'){
