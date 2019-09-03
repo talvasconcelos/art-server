@@ -20,7 +20,7 @@ export default class Home extends Component {
 		if(pageN == 0 || pageN == this.state.pages + 1) { return }
 		const url = `images?pageNo=${pageN}`
 		return callBackendAPI(url)
-			.then(res => this.setState({ images: res.message,  page: +pageN}))
+			.then(res => this.setState({ images: res.message,  page: +pageN, loading: false}))
 			.then(() => window.scrollTo(0, 0))
 			.catch(err => console.log(err))
 	}
@@ -32,7 +32,8 @@ export default class Home extends Component {
 			.then(res => this.setState({ 
 				images: res.message,
 				page: +pageN,
-				pages: breadcrum ? this.state.pages : res.pages
+				pages: breadcrum ? this.state.pages : res.pages,
+				loading: false
 			}))
 			.then(() => window.scrollTo(0, 0))
 			.catch(err => console.log(err))

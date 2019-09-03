@@ -91,11 +91,11 @@ const updateImage = async (id) => {
     return data.value
 }
 
-const imageUpdateNotExclusive = async (id) => {
+const imageUpdateNotExclusive = async (url) => {
     const Images = db.collection('items')
-    console.log('not exclusive')
-    // const id = await decrypt(url)
-    // if(!id) {return false}
+    console.log('not exclusive', id)
+    const id = await decrypt(url)
+    if(!id) {return false}
     const update = {confirmed: '', paid: '', downloadID: ''}
     const data = await Images.updateOne({_id: new ObjectId(id)}, {$unset: update})
         .catch(err => {

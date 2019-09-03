@@ -8,17 +8,17 @@ const Footer = () => {
                 <p>All payments are made in Bitcoin, thanks to the awesome people at <a href='https://btcpayserver.org/'>BTCPAY</a>. I recommend using the Lightning Network for the payments to reduce fees.</p>
                 <div>
                     <a href='https://twitter.com/talvasconcelos'>
-                        <span class="icon">
+                        <span class="icon is-medium">
                             <i class="fa fa-twitter"></i>
                         </span>
                     </a>
                     <a href='https://www.instagram.com/talvasconcelos/'>
-                        <span class="icon">
+                        <span class="icon is-medium">
                             <i class="fa fa-instagram"></i>
                         </span>
                     </a>
                     <a href='https://github.com/talvasconcelos'>
-                        <span class="icon">
+                        <span class="icon is-medium">
                             <i class="fa fa-github"></i>
                         </span>
                     </a>

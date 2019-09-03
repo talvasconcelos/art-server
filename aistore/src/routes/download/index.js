@@ -58,7 +58,7 @@ export default class Download extends Component {
             return
         }
         if(this.state.imageDownloaded && !this.state.checked){
-            postAPIupdate(`image/update/${this.props,id}`)
+            postAPIupdate(`image/update/${this.state.url}`)
         }
     }
 
