@@ -93,8 +93,8 @@ const updateImage = async (id) => {
 
 const imageUpdateNotExclusive = async (url) => {
     const Images = db.collection('items')
-    console.log('not exclusive', id)
     const id = await decrypt(url)
+    console.log('not exclusive', id)
     if(!id) {return false}
     const update = {confirmed: '', paid: '', downloadID: ''}
     const data = await Images.updateOne({_id: new ObjectId(id)}, {$unset: update})
