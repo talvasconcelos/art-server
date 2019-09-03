@@ -1,4 +1,4 @@
-const API = 'https://nudeart.herokuapp.com/api/'
+const API = 'http://localhost:3000/api/'//'https://nudeart.herokuapp.com/api/'
 
 export const callBackendAPI = async (target) => {
     const response = await fetch(`${API}${target}`)
@@ -19,11 +19,11 @@ export const postAPIupdate = async (target, data) => {
             'Content-Type': 'application/json'
           }
     })
-    const msg = await response.json()
+    const body = await response.json()
 
     if (response.status !== 200) {
         throw Error(body.message)
     }
     // console.log(body)
-    return msg
+    return body
 }

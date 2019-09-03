@@ -38,7 +38,7 @@ export default class Download extends Component {
     }
 
     handleCheckbox = () => {
-        console.log(this.state.checked)
+        // console.log(this.state.checked)
         this.setState({checked: !this.state.checked})
     }
 
@@ -53,7 +53,7 @@ export default class Download extends Component {
     }
 
     componentWillUnmount = async () => {
-        console.log(this.state, this.props)
+        // console.log(this.state, this.props)
         if(this.state.deleted) {
             console.log('unmount', this.state)
             return
@@ -67,8 +67,11 @@ export default class Download extends Component {
 		// console.log('Ping API', this.props)
         callBackendAPI(`download/${this.props.id}`)
 			.then(res => {
-                console.log(res)
-                if(res.error){ return route('/notfound', true) }
+                // console.log(res)
+                if(res.error){ 
+                    console.log(res)
+                    return route('/notfound', true) 
+                }
                 this.setState({
                     image: res.image,
                     latent: JSON.stringify(res.latent),

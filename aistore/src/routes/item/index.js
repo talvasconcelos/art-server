@@ -39,9 +39,13 @@ export default class Profile extends Component {
 			.then(() => {
 				const head = document.head
 				const ogImg = document.createElement('meta')
+				const twitterCard = document.createElement('meta')
 				ogImg.setAttribute('property', 'og:image')
 				ogImg.setAttribute('content', `https://nudeart.sparkpay.pt/assets/images/${this.state.image}`)
+				twitterCard.setAttribute('name', 'twitter:card')
+				twitterCard.setAttribute('content', 'summary_large_image')
 				head.appendChild(ogImg)
+				head.appendChild(twitterCard)
 			})
 			.catch(err => console.log(err));
 	}

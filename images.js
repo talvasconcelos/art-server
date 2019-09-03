@@ -78,7 +78,8 @@ const markImagePaid = async (id) => {
 
 const updateImage = async (id) => {
     const Images = db.collection('items')
-    const hasLink = await Images.findOne({_id: new ObjectId(id)}) 
+    const hasLink = await Images.findOne({_id: new ObjectId(id)}).catch(console.error)
+    // console.log(hasLink)
     if(hasLink.paid && hasLink.confirmed) {
         console.log(hasLink.downloadID)
         return false
@@ -119,6 +120,7 @@ const deleteImage = async (id) => {
 const getImageDownload = async (url) => {
     const Images = db.collection('items')
     const id = await decrypt(url)
+    console.log(id)
     if(!id) {return false}
     const data = await Images.findOne({_id: new ObjectId(id), confirmed: true})
         .catch(err => {
