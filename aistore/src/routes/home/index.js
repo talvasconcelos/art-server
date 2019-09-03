@@ -10,7 +10,8 @@ export default class Home extends Component {
 		images: [],
 		page: 1,
 		share: false,
-		pages: 0
+		pages: 0,
+		loading: true
 	}
 
 	handleBreadcrum =  (e) => {		
@@ -39,8 +40,7 @@ export default class Home extends Component {
 
 	getData(url) {
 		return callBackendAPI(url)
-			.then(res => this.setState({ images: res.message,  pages: res.pages}))
-			.then(() => console.log(this.state))
+			.then(res => this.setState({ images: res.message,  pages: res.pages, loading: false}))
 			.catch(err => console.log(err))
 	}
 
@@ -57,9 +57,10 @@ export default class Home extends Component {
 		return this.gotoPage(this.props.page, false)
 	}
 
-	render({}, {images, page}) {
+	render({}, {loading, images, page}) {
 		return (
 			<main>
+				{loading && <div class={`container pageloader ${loading && 'is-active'}`}><span class="title">Server is waking up...</span></div>}
 				<Hero />
 				{this.state.share && <Share active={this.state.share} close={this.toggleShare} id={this.state.shareImgID} img={this.state.shareImg} />}
 				<div class='section'>

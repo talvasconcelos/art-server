@@ -2,26 +2,64 @@ import { h, Component } from 'preact'
 import { route } from 'preact-router'
 
 
-import { callBackendAPI } from '../../api'
+import { callBackendAPI, postAPIupdate } from '../../api'
 
 export default class Download extends Component {
 
     state = {
         error: false,
+        checked: false,
+        notification: true
     }
 
     imageDownload = () => {
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
-        const img = new Image()
-        img.src = `${this.state.url}/${this.state.image}`
-        img.onload = () => ctx.drawImage(img, 0, 0)
+        const img = document.getElementById('upImg')
         const link = document.createElement('a')
+        ctx.drawImage(img, 0, 0)
         link.href = canvas.toDataURL()
         link.setAttribute('download', `upscaled_${this.state.image}`)
         document.body.appendChild(link)
         link.click()
         link.parentNode.removeChild(link)
+        this.setState({imageDownloaded: true})
+    }
+
+    latentDownload = () => {
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(this.state.latent)
+        const link = document.createElement('a')
+        link.href = dataUri
+        link.setAttribute('download', this.state.latentFile)
+        document.body.appendChild(link)
+        link.click()
+        link.parentNode.removeChild(link)
+        this.setState({latentDownloaded: true})
+    }
+
+    handleCheckbox = () => {
+        console.log(this.state.checked)
+        this.setState({checked: !this.state.checked})
+    }
+
+    closeNotification = () => {
+        this.setState({notification: !this.state.notification})
+    }
+
+    deleteImage = () => {
+        callBackendAPI(`delete/${this.props.id}`)
+            .then(() => this.setState({deleted: true}))
+            .then(() => route('/', true))
+    }
+
+    componentWillUnmount() {
+        if(this.state.deleted) {
+            console.log('unmount', this.state)
+            return
+        }
+        if(this.state.imageDownloaded && !this.state.checked){
+            postAPIupdate(`image/update/${this.props,id}`)
+        }
     }
 
 	componentDidMount() {
@@ -32,15 +70,16 @@ export default class Download extends Component {
                 if(res.error){ return route('/notfound', true) }
                 this.setState({
                     image: res.image,
-                    latent: JSON.stringify(res.latent, null),
+                    latent: JSON.stringify(res.latent),
+                    latentFile: res.image.split('.')[0] + '.json',
                     genre: res.genre,
-                    url: `http://sparkpay.pt/sr_img/${res.downloadID}/`
+                    url: `../assets/image_sr/${res.downloadID}/`
                 })
             })
 			.catch(console.error);
 	}
 
-	render({}, {image, latent, url}) {
+	render({}, {image, latent, url, checked, notification}) {
 		return (
 			<main class='section'>
 				<div class='container content'>
@@ -62,8 +101,31 @@ export default class Download extends Component {
                         <h5>Save your files</h5>
                         <div class="field is-grouped">
                             <p class='control'>
-                                <a download={`upscaled_${image}`} class={`button is-primary imageDownload`} onClick={this.imageDownload}>Scale 2x</a>
+                                <a class={`button is-primary`} onClick={this.imageDownload}>Image</a>
                             </p>
+                            <p class='control'>
+                                <a class={`button is-primary`} onClick={this.latentDownload}>Latent</a>
+                            </p>
+                        </div>
+                    </div>
+                    <br/>
+                    <div>
+                        <h5>Make it exclusive</h5>
+                        <div class="field">
+                            <p class='control'>
+                                <label class="checkbox">
+                                    <input type="checkbox" onChange={this.handleCheckbox} />
+                                    &nbsp;Delete image
+                                </label>
+                            </p>
+                            {checked &&
+                            <p class='control'>
+                                {notification && <div class="notification is-danger">
+                                    <button class="delete" onClick={this.closeNotification}></button>
+                                    Warning! Make sure you downloaded your files. This will delete the image forever! Close this warning to be able to click the button.
+                                </div>}
+                                <a disabled={notification} class={`button is-danger`} onClick={this.deleteImage}>DELETE</a>
+                            </p>}
                         </div>
                     </div>
 				</div>

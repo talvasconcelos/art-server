@@ -47,7 +47,6 @@ export default class Profile extends Component {
 	}
 
 	render({}, { image, latent, genre, ready, email, id, paid }) {
-		console.log(this.state)
 		return (
 			<main>
 				<div class="section container">

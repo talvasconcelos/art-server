@@ -12,13 +12,13 @@ export default class Thankyou extends Component {
 				image: res.message.image,
 				latent: res.message.latent,
 				genre: res.message.genre,
+				confirmed: res.message.confirmed || false,
 				downloadUrl : res.message.downloadID || false
 			}))
 			.catch(err => console.log(err))
-		//https://github.com/GregFrench/super-resolution/tree/master/public/model
     }
     
-    render({}, {image, downloadUrl}) {
+    render({}, {image, downloadUrl, confirmed}) {
         return (
             <div class='section'>
                 <div class='container'>
@@ -35,7 +35,7 @@ export default class Thankyou extends Component {
 					<p>If you entered a valid email, you can close this window and i'll contact you as soon as the payment gets confirmed, else don't leave this page or copy the URL and come back in a few minutes. Hit refresh in a few minutes (depending on the transaction fees) for the download link to be displayed bellow.
 					</p>
 					<p>
-						<Link href={`/download/${downloadUrl}`} class={`button is-primary ${!downloadUrl ? 'is-loading' : ''}`}>Download</Link>
+						<Link href={`/download/${downloadUrl}`} class={`button is-primary ${!confirmed ? 'is-loading' : ''}`}>Download</Link>
 					</p>
 				</div>
                 </div>

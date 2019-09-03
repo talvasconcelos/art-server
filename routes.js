@@ -40,6 +40,14 @@ module.exports = polka()
         }
         res.end(JSON.stringify(image, null, 2))
     })
+    .get('/delete/:id', async (req, res) => {
+        const msg = await models.deleteImage(req.params.id).catch(console.error)
+        res.end(JSON.stringify(msg))
+    })
+    .post('image/update/:id', async (req, res) => {
+        const msg = await models.imageUpdateNotExclusive(req.params.id)
+        res.end(JSON.stringify(msg))
+    })
     .post('/payments/notify', async (req, res) => {
         console.log('check invoice')
         const status = await checkInvoice(req.body.id)
@@ -57,12 +65,13 @@ module.exports = polka()
                 res.end()
                 return
             }
+            const link = `https://nudeart.sparkpay.pt/download/${await url.downloadID}`
             const message = {
                 from: process.env.MAIL_SENDER, // Sender address
                 to: status.data.buyer.email,// List of recipients
                 subject: 'Your painting download is ready!', // Subject line
                 text: `Your payment just got confirmed. You can proceed to the link bellow to download your painting!\n
-                Link: https://nudeart.sparkpay.pt/download/${url.downloadID}` // Plain text body
+                Link: ${link}` // Plain text body
             }
             await mailer(message)
         }

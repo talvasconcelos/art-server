@@ -66,7 +66,8 @@ const getSingleImage = async (id) => {
 
 const markImagePaid = async (id) => {
     const Images = db.collection('items')
-    const update = {paid: true}
+    const randomURL = encrypt(id)
+    const update = {paid: true, downloadID: randomURL}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
         .catch(err => {
             console.error(err)
@@ -78,12 +79,11 @@ const markImagePaid = async (id) => {
 const updateImage = async (id) => {
     const Images = db.collection('items')
     const hasLink = await Images.findOne({_id: new ObjectId(id)}) 
-    if(hasLink.confirmed) {
+    if(hasLink.paid && hasLink.confirmed) {
         console.log(hasLink.downloadID)
         return false
     }
-    const randomURL = encrypt(id)
-    const update = {downloadID: randomURL, confirmed: true}
+    const update = {confirmed: true}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
         .catch(err => {
             return false
@@ -91,9 +91,24 @@ const updateImage = async (id) => {
     return data.value
 }
 
-const deleteImage = async (id) => {
+const imageUpdateNotExclusive = async (id) => {
     const Images = db.collection('items')
-    const deleteImg = await Images.findOneAndDelete({_id: new ObjectId(id)}, {new: true})
+    console.log('not exclusive')
+    // const id = await decrypt(url)
+    // if(!id) {return false}
+    const update = {confirmed: '', paid: '', downloadID: ''}
+    const data = await Images.updateOne({_id: new ObjectId(id)}, {$unset: update})
+        .catch(err => {
+            console.error(err)
+            return false
+        })
+    return data.value
+}
+
+const deleteImage = async (id) => {
+    console.log('deleting image', decrypt(id))
+    const Images = db.collection('items')
+    const deleteImg = await Images.findOneAndDelete({downloadID: id})
         .catch(err => {
             console.error(err)
             return false
@@ -110,7 +125,6 @@ const getImageDownload = async (url) => {
             console.error(err)
             return false
         })
-
     return data
 }
 
@@ -120,7 +134,8 @@ module.exports = {
     markImagePaid,
     updateImage,
     getImageDownload,
-    deleteImage
+    deleteImage,
+    imageUpdateNotExclusive
 }
 
 /*

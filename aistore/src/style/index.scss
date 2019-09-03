@@ -30,7 +30,7 @@ $min_font: 16px;
 $max_font: 20px;
 
 @import "../node_modules/bulma/bulma";
-// @import "pageloader";
+@import "pageloader";
 
 html {
 	@include fluid-type($min_width, $max_width, $min_font, $max_font);
