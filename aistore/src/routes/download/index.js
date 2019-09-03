@@ -52,13 +52,14 @@ export default class Download extends Component {
             .then(() => route('/', true))
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = async () => {
+        console.log(this.state, this.props)
         if(this.state.deleted) {
             console.log('unmount', this.state)
             return
         }
         if(this.state.imageDownloaded && !this.state.checked){
-            postAPIupdate(`image/update/${this.state.url}`)
+            await postAPIupdate(`image/update/${this.props.id}`)
         }
     }
 
