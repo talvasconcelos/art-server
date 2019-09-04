@@ -84,7 +84,7 @@ const updateImage = async (id) => {
         console.log(hasLink.downloadID)
         return false
     }
-    const update = {confirmed: true}
+    const update = {confirmed: true, exclusive: false}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
         .catch(err => {
             console.error(err)

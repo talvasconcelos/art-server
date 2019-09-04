@@ -61,7 +61,7 @@ export default class Home extends Component {
 	render({}, {loading, images, page}) {
 		return (
 			<main>
-				{loading && <div class={`container pageloader ${loading && 'is-active'}`}><span class="title">Server is waking up...</span></div>}
+				{loading && <div class={`pageloader ${loading && 'is-active'}`}><span class="title">Server is waking up...</span></div>}
 				<Hero />
 				{this.state.share && <Share active={this.state.share} close={this.toggleShare} id={this.state.shareImgID} img={this.state.shareImg} />}
 				<div class='section'>

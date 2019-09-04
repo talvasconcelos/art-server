@@ -28,6 +28,7 @@ export default class Profile extends Component {
 	
 	componentDidMount() {
 		console.log('Ping API')
+		window.scrollTo(0, 0)
 		callBackendAPI(`images/${this.props.image}`)
 			.then(res => this.setState({ 
 				image: res.message.image,
@@ -35,7 +36,7 @@ export default class Profile extends Component {
 				genre: res.message.genre,
 				id: res.message._id,
 				paid: res.message.paid || false,
-				confirmed: res.message.confirmed || false
+				exclusive: res.message.exclusive
 			}))
 			.then(() => {
 				const head = document.head
@@ -51,7 +52,7 @@ export default class Profile extends Component {
 			.catch(err => console.log(err));
 	}
 
-	render({}, { image, latent, genre, ready, email, id, paid }) {
+	render({}, { image, latent, genre, ready, email, id, paid, exclusive }) {
 		return (
 			<main>
 				<div class="section container">
@@ -76,13 +77,19 @@ export default class Profile extends Component {
 							<div class="column">
 								<div class='content'>
 									<h3 class='capitalize'>{`${genre}`}</h3>
+									{!exclusive && <p>
+										<p class="tag is-warning">Not Exclusive</p>										
+										<p><small><i>Other user already bought this artwork but, decided to leave it on the database. You can buy it but, you'll know there's someone else in the world that has the same one!!</i></small></p>
+									</p>}
+									
 									<p>Artwork made by artificial intelligence. Generative Adversarial Network (GAN) trained on <a href='https://www.wikiart.org/en/paintings-by-genre/nude-painting-nu?select=featured#!#filterName:featured,viewType:masonry'>Wikiart Nudes</a> and a few hundred NSFW images. After payment you'll get a link to download an AI upscaled PNG version of the painting.</p>
-									<p>After payment confirmation the image will be permanently deleted from the database, making it exclusive.</p>
+									<p>After payment confirmation you'll get a download link for the full size image. After downloading you can leave it on the server so that others can see and buy also or make it exclusive by permanently deleting the image from the database, making it exclusive.</p>
+									<p>I'll try to recicle the photos every month or so, by generating new ones and replacing the database. so check in every so often to see what's new!</p>
 									<p>Price: 10000 satoshis</p>
 									<p><small>Piece generated from the gaussian latent space shown bellow.</small></p>
 									<Latent data={latent} />
 									<br/>
-									{paid && <p>Artwork is alreadt taken and is awaiting payment confirmation.</p>}
+									{paid && <p>Artwork is already taken and is awaiting payment confirmation.</p>}
 									{!paid && <div>
 										<div class="field">
 											<p class="control">
