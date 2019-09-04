@@ -17,7 +17,7 @@ export default class Download extends Component {
         const ctx = canvas.getContext('2d')
         const img = document.getElementById('upImg')
         const link = document.createElement('a')
-        ctx.drawImage(img, 0, 0)
+        ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight)
         link.href = canvas.toDataURL()
         link.setAttribute('download', `upscaled_${this.state.image}`)
         document.body.appendChild(link)

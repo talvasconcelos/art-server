@@ -61,19 +61,19 @@ module.exports = polka()
         if(invoiceStatus === 'confirmed' || invoiceStatus === 'complete'){
             console.log('Download')
             const url = await models.updateImage(status.data.orderId)
-            if(!url) {
-                res.end()
-                return
-            }
-            const link = `https://nudeart.sparkpay.pt/download/${await url.downloadID}`
-            const message = {
-                from: process.env.MAIL_SENDER, // Sender address
-                to: status.data.buyer.email,// List of recipients
-                subject: 'Your painting download is ready!', // Subject line
-                text: `Your payment just got confirmed. You can proceed to the link bellow to download your painting!\n
-                Link: ${link}` // Plain text body
-            }
-            await mailer(message)
+                .then((msg) => {
+                    if(!msg) { return res.end() }
+                    const link = `https://nudeart.sparkpay.pt/download/${msg.downloadID}`
+                    const message = {
+                        from: process.env.MAIL_SENDER, // Sender address
+                        to: status.data.buyer.email,// List of recipients
+                        subject: 'Your painting download is ready!', // Subject line
+                        text: `Your payment just got confirmed. You can proceed to the link bellow to download your painting!\n
+                        Link: ${link}` // Plain text body
+                    }
+                    return mailer(message)
+                })
+                .catch(console.error)
         }
         if(invoiceStatus === 'paid'){
             await models.markImagePaid(status.data.orderId)

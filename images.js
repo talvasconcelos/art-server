@@ -87,6 +87,7 @@ const updateImage = async (id) => {
     const update = {confirmed: true}
     const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
         .catch(err => {
+            console.error(err)
             return false
         })
     return data.value
