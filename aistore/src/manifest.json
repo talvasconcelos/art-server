@@ -1,11 +1,11 @@
 {
-  "name": "aistore",
-  "short_name": "aistore",
+  "name": "nudeart",
+  "short_name": "nudeart",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#fff",
-  "theme_color": "#673ab8",
+  "theme_color": "#007ee3",
   "icons": [
     {
       "src": "/assets/icons/android-chrome-192x192.png",

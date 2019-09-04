@@ -99,8 +99,8 @@ export default class Profile extends Component {
 												{/* <a class="button is-primary">฿uy</a> */}
 											</p>
 										</div>
-										<form method="POST" action="https://testnet.demo.btcpayserver.org/apps/2v7gwTLEfwyWLUyMxDkBmxPhMTWp/pos">
-										{/* <form method="POST" action="https://btcpay01.sparkpay.pt/apps/3LH81CAYBXkicZvGBv7XNvvC5t3D/pos"> */}
+										{/* <form method="POST" action="https://testnet.demo.btcpayserver.org/apps/2v7gwTLEfwyWLUyMxDkBmxPhMTWp/pos"> */}
+										<form method="POST" action="https://btcpay01.sparkpay.pt/apps/3LH81CAYBXkicZvGBv7XNvvC5t3D/pos">
 											<input type="hidden" name="email" value={email} />
 											<input type="hidden" name="orderId" value={id} />
 											<input type="hidden" name="notificationUrl" value="https://nudeart.herokuapp.com/api/payments/notify" /> 

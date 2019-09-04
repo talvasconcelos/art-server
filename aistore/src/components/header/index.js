@@ -4,7 +4,7 @@ const Header = () => (
 			<nav class='navbar is-primary'>
 				<div class='navbar-brand'>
 					<a class="navbar-item" href="/">
-						<h2>AIrtStore</h2>
+						<h2>NudeArt</h2>
 					</a>
 				</div>
 			</nav>
