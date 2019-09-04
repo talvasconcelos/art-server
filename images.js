@@ -122,7 +122,7 @@ const getImageDownload = async (url) => {
     const Images = db.collection('items')
     const id = await decrypt(url)
     console.log(id)
-    if(!id) {return false}
+    if(!id) {return {error: true, message: 'Not a valid link!'}}
     const data = await Images.findOne({_id: new ObjectId(id), confirmed: true})
         .catch(err => {
             console.error(err)

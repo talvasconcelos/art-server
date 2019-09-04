@@ -52,17 +52,6 @@ export default class Download extends Component {
             .then(() => route('/', true))
     }
 
-    componentWillUnmount = async () => {
-        // console.log(this.state, this.props)
-        if(this.state.deleted) {
-            console.log('unmount', this.state)
-            return
-        }
-        if(this.state.imageDownloaded && !this.state.checked){
-            await postAPIupdate(`image/update/${this.props.id}`)
-        }
-    }
-
 	componentDidMount() {
 		// console.log('Ping API', this.props)
         callBackendAPI(`download/${this.props.id}`)
@@ -70,7 +59,7 @@ export default class Download extends Component {
                 // console.log(res)
                 if(res.error){ 
                     console.log(res)
-                    return route('/notfound', true) 
+                    return route('/notfound', true)
                 }
                 this.setState({
                     image: res.image,
