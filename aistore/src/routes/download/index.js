@@ -9,7 +9,8 @@ export default class Download extends Component {
     state = {
         error: false,
         checked: false,
-        notification: true
+        notification: true,
+        imageDownloaded: false
     }
 
     imageDownload = () => {
@@ -17,7 +18,9 @@ export default class Download extends Component {
         const ctx = canvas.getContext('2d')
         const img = document.getElementById('upImg')
         const link = document.createElement('a')
-        ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight)
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        ctx.drawImage(img, 0, 0)
         link.href = canvas.toDataURL()
         link.setAttribute('download', `upscaled_${this.state.image}`)
         document.body.appendChild(link)
@@ -52,6 +55,10 @@ export default class Download extends Component {
             .then(() => route('/', true))
     }
 
+    notExclusive = () => {
+        postAPIupdate(`image/update/${this.props.id}`)
+    }
+
 	componentDidMount() {
 		// console.log('Ping API', this.props)
         callBackendAPI(`download/${this.props.id}`)
@@ -69,15 +76,15 @@ export default class Download extends Component {
                     url: `../assets/image_sr/${res.downloadID}/`
                 })
             })
-			.catch(console.error);
+			.catch(console.error)
 	}
 
-	render({}, {image, latent, url, checked, notification}) {
+	render({}, {image, latent, url, checked, notification, imageDownloaded}) {
 		return (
 			<main class='section'>
 				<div class='container content'>
-                    <h2>Upscaled Painting</h2>
-                    <figure class='image is-square'>
+                    <h2>Your Painting</h2>
+                    <figure class='image'>
 						<img id='upImg' src={`${url}${image}`} alt='' />
 					</figure>
                     <div>
@@ -87,11 +94,12 @@ export default class Download extends Component {
                     <br/>                    
                     <div>
                         <h5>Done</h5>
-                        <p>Your image is ready for download. You can either right-click the image and do save image or click the buttons bellow. If you want to make this an exclusive art painting, click the "Exclusive" button bellow. Beware that the painting will no longer be displayed and will be deleted from the database. The only way to reproduce the painting is with the latent space.</p>
+                        <p>Your image is ready for download. You can download the image and latent by clicking the buttons bellow. If you want to make this an exclusive art painting, check the <strong>"Make it Exclusive"</strong> section bellow. Beware that the painting will no longer be displayed and will be deleted from the database. The only way to reproduce the painting is with the latent space.</p>
                     </div>
                     <br/>
                     <div>
                         <h5>Save your files</h5>
+                        <div id='canvas'></div>
                         <div class="field is-grouped">
                             <p class='control'>
                                 <a class={`button is-primary`} onClick={this.imageDownload}>Image</a>
@@ -104,10 +112,14 @@ export default class Download extends Component {
                     <br/>
                     <div>
                         <h5>Make it exclusive</h5>
+                        {!imageDownloaded && <p>Download the image first.</p>}
                         <div class="field">
+                            <p class='control'>            
+                                <a disabled={!imageDownloaded} class={`button is-primary is-outlined`} onClick={this.notExclusive}>{`Nah... let others have it!`}</a>
+                            </p>
                             <p class='control'>
                                 <label class="checkbox">
-                                    <input type="checkbox" onChange={this.handleCheckbox} />
+                                    <input disabled={!imageDownloaded} type="checkbox" onChange={this.handleCheckbox} />
                                     &nbsp;Delete image
                                 </label>
                             </p>

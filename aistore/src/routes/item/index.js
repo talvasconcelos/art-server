@@ -34,7 +34,8 @@ export default class Profile extends Component {
 				latent: res.message.latent,
 				genre: res.message.genre,
 				id: res.message._id,
-				paid: res.message.paid || false
+				paid: res.message.paid || false,
+				confirmed: res.message.confirmed || false
 			}))
 			.then(() => {
 				const head = document.head
@@ -81,7 +82,7 @@ export default class Profile extends Component {
 									<p><small>Piece generated from the gaussian latent space shown bellow.</small></p>
 									<Latent data={latent} />
 									<br/>
-									{paid && <p>Artwork is awaiting payment confirmation.</p>}
+									{paid && <p>Artwork is alreadt taken and is awaiting payment confirmation.</p>}
 									{!paid && <div>
 										<div class="field">
 											<p class="control">
