@@ -55,12 +55,34 @@ module.exports = polka()
             res.end()
             return
         }
+
+        const lnd = status.data.paymentTotals.btC_LightningLike
         const invoiceStatus = status.data.status
+        
         console.log(invoiceStatus)
+        if(lnd && invoiceStatus === 'complete'){
+            console.log('Lightning Payment')
+            await models.lndBuy(status.data.orderId)
+                .then((msg) => {
+                    if(!msg) { return res.end() }
+                    const link = `https://nudeart.sparkpay.pt/download/${msg.downloadID}`
+                    const message = {
+                        from: process.env.MAIL_SENDER, // Sender address
+                        to: status.data.buyer.email,// List of recipients
+                        subject: 'Your painting download is ready!', // Subject line
+                        text: `Your Lightning Network payment is confirmed. You can proceed to the link bellow to download your painting!\n
+                        Link: ${link}` // Plain text body
+                    }
+                    return message
+                })
+                .then(m => mailer(m))
+                .catch(console.error)
+            return res.end()
+        }
         // console.log(status.data.orderId)
         if(invoiceStatus === 'confirmed' || invoiceStatus === 'complete'){
             console.log('Download')
-            const url = await models.updateImage(status.data.orderId)
+            await models.updateImage(status.data.orderId)
                 .then((msg) => {
                     if(!msg) { return res.end() }
                     const link = `https://nudeart.sparkpay.pt/download/${msg.downloadID}`
@@ -71,8 +93,9 @@ module.exports = polka()
                         text: `Your payment just got confirmed. You can proceed to the link bellow to download your painting!\n
                         Link: ${link}` // Plain text body
                     }
-                    return mailer(message)
+                    return message
                 })
+                .then(m => mailer(m))
                 .catch(console.error)
         }
         if(invoiceStatus === 'paid'){

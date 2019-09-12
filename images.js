@@ -64,6 +64,18 @@ const getSingleImage = async (id) => {
     return {error: false, message: data}
 }
 
+const lndBuy = async (id) => {
+    const Images = db.collection('items')
+    const randomURL = encrypt(id)
+    const update = {paid: true, downloadID: randomURL, confirmed: true, exclusive: false}
+    const data = await Images.findOneAndUpdate({_id: new ObjectId(id)}, {$set: update}, {new: true})
+        .catch(err => {
+            console.error(err)
+            return false
+        })
+    return data.value
+}
+
 const markImagePaid = async (id) => {
     const Images = db.collection('items')
     const randomURL = encrypt(id)
@@ -138,7 +150,8 @@ module.exports = {
     updateImage,
     getImageDownload,
     deleteImage,
-    imageUpdateNotExclusive
+    imageUpdateNotExclusive,
+    lndBuy
 }
 
 /*
