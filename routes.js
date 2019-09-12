@@ -77,10 +77,9 @@ module.exports = polka()
                 })
                 .then(m => mailer(m))
                 .catch(console.error)
-            return res.end()
         }
         // console.log(status.data.orderId)
-        if(invoiceStatus === 'confirmed' || invoiceStatus === 'complete'){
+        if(!lnd && (invoiceStatus === 'confirmed' || invoiceStatus === 'complete')){
             console.log('Download')
             await models.updateImage(status.data.orderId)
                 .then((msg) => {
@@ -98,7 +97,7 @@ module.exports = polka()
                 .then(m => mailer(m))
                 .catch(console.error)
         }
-        if(invoiceStatus === 'paid'){
+        if(!lnd && invoiceStatus === 'paid'){
             await models.markImagePaid(status.data.orderId)
             console.log('Await at least 1 confirmation!')
             const message = {
